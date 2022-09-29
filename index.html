@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* .finalDiv{
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            grid-template-rows: 200px; */
+            /* flex-direction: column-reverse; */
+            
+        /* }
+        .finalDiv>div{
+            border: 2px solid black;
+        }
+        .maainDiv{
+            height: 300px;
+        }
+        .profileImage{
+            width: 80%;
+            border-radius: 80%;
+            height: 200px;
+        }  */
+
+         #main{
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            grid-template-rows: auto;
+            /* background-color: aqua; */
+         }
+        /* #main > div{
+            border: 2px solid black;
+            background-color: yellow;
+        }
+    */
+    .profileImage{
+            width: 400px;
+            border-radius: 80%;
+            height: 400px; 
+        } 
+        #editProfile{
+           margin-top: 80px;
+           background-color: #f6f8fa;
+           border: 2px solid black;
+           text-align: center;
+           width: 60%;
+        }
+        .langUpdated{
+            display: flex;
+            gap: 40px;
+        }
+     </style> 
+    <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+    <div id="navbar">
+
+    </div>
+    <div id="main">
+    
+    </div>
+</body>
+</html>
+
+<script type="module">
+
+    import {header} from "./components/header.js";
+    console.log(header);
+
+    let navbar = document.querySelector("#navbar");
+    navbar.innerHTML = header();
+
+    let input_box = document.querySelector("#search-input");
+
+    input_box.addEventListener('keypress', () => {
+        getData(event);
+    });
+
+    let img = document.querySelector("#profile-img");
+ 
+    const getData = async (e) =>{
+      try {
+        if(e.code === "Enter")
+        {
+            let input = input_box.value;
+            let res = await fetch(`https://api.github.com/users/${input}/repos`);
+            let data = await res.json();
+            console.log(data);
+            img.src = data[0].owner.avatar_url;
+            appendData(data);
+            
+        }
+      } catch (error) {
+          console.log(error);
+          
+      }
+        // console.log(e)
+      
+    };
+    
+    const appendData = (data) => {
+        let main = document.querySelector("#main");
+
+        main.innerHTML = null;
+
+        // let finalDiv = document.createElement("div");
+        // finalDiv.setAttribute('class','finalDiv');
+
+        let maainDiv1 = document.createElement("div");
+        maainDiv1.setAttribute('class','maainDiv1');
+
+        let profileImage = document.createElement("img");
+        profileImage.src = data[0].owner.avatar_url;
+        profileImage.setAttribute('class','profileImage');
+
+
+        let editProfile = document.createElement("h2");
+        editProfile.innerText = "Edit-Profile";
+        editProfile.setAttribute('id','editProfile');
+      
+
+        maainDiv1.append(profileImage,editProfile);
+        // profileDiv.append(maainDiv1);
+
+        // let profileId = document.createElement("p");
+        // profileId.innerText = data[0].
+
+        //  let follower = document.createElement("p");
+        // follower.innerText = 
+
+        let maainDiv2 = document.createElement("div");
+        maainDiv2.setAttribute('class','maainDiv2');
+
+        let repositry = document.createElement("h1");
+        repositry.innerText =`Repositry`;
+
+        maainDiv2.append(repositry);
+
+        data.forEach(function(elem){
+          
+
+            let projectName = document.createElement("h2");
+            projectName.setAttribute('class','projectName');
+            projectName.style.color = "#0969dc";
+
+            // let url = document.createElement("a");
+            // url.href = "https://www.geeksforgeeks.org/";
+            // url.title = "Google Link";
+
+            let langUpdated = document.createElement("div");
+            langUpdated.setAttribute('class','langUpdated');
+            let projectLanguage = document.createElement("p");
+            projectLanguage.setAttribute('class','projectLanguage');
+            let projectUpdatedDays = document.createElement("p");
+            projectUpdatedDays.setAttribute('class','projectUpdatedDays');
+
+
+            projectName.innerText = `${elem.name}`;
+            projectName.style.height = "10px"
+            // console.log(projectName);
+            // projectTitle.innerText = `${elem[0].title} updated_at`;
+            projectLanguage.innerText = `${elem.language}`;
+
+            projectUpdatedDays.innerText = `${elem.updated_at}`
+            
+            langUpdated.append(projectLanguage,projectUpdatedDays)
+            langUpdated.style.height = "50px";
+            langUpdated.style.borderBottom = "1px solid black"
+            langUpdated.style.width = "50%"
+            maainDiv2.append(projectName,langUpdated);
+            // finalDiv.append(maainDiv1,maainDiv2);
+            
+        });
+            
+
+        main.append(maainDiv1,maainDiv2);
+}
+
+    
+
+</script>
